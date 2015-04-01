@@ -150,7 +150,7 @@ int WordCount::count(int argc, char* argv[]) {
         // Do the search
         map<string, int> wordcount;
         int size = 0;
-        WordStruct * words;
+        WordStruct* words = NULL;
         if (buffer != NULL) {
             char* word = strtok(buffer, " ,.\r\n");
             while (word != NULL) {
@@ -161,15 +161,17 @@ int WordCount::count(int argc, char* argv[]) {
                 word = strtok(NULL, " ,.\r\n");
             }
             delete []buffer;
-            
-            size = wordcount.size();
-            words = new WordStruct[size];
-            int i = 0;
-            for (map<string, int>::iterator it = wordcount.begin(); it != wordcount.end(); it++) {
 
-                strcpy(words[i].word, (it->first).c_str());
-                words[i].count = it->second;
-                i++;
+            size = wordcount.size();
+            if (size > 0) {
+                words = new WordStruct[size];
+                int i = 0;
+                for (map<string, int>::iterator it = wordcount.begin(); it != wordcount.end(); it++) {
+
+                    strcpy(words[i].word, (it->first).c_str());
+                    words[i].count = it->second;
+                    i++;
+                }
             }
         }
         
@@ -214,8 +216,9 @@ int WordCount::count(int argc, char* argv[]) {
             }
         }
         wordcount.clear();
-        if (size > 0)
+        if (words != NULL && size > 0)
             delete []words;
+        cout << "Process: " << rank << " released memory.\n";
         totalTime_noRead += (MPI::Wtime() - startTime_noRead);
         totalTime_NoDist += (MPI::Wtime() - startTime_noDist);
     }
