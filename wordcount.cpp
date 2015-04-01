@@ -218,7 +218,8 @@ int WordCount::count(int argc, char* argv[]) {
         wordcount.clear();
         if (words != NULL && size > 0)
             delete []words;
-        cout << "Process: " << rank << " released memory.\n";
+        if (debug)
+            cout << "Process: " << rank << " released memory.\n";
         totalTime_noRead += (MPI::Wtime() - startTime_noRead);
         totalTime_NoDist += (MPI::Wtime() - startTime_noDist);
     }
